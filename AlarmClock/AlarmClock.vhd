@@ -1,6 +1,7 @@
 LIBRARY IEEE;
 USE IEEE.STD_LOGIC_1164.ALL;
 USE IEEE.NUMERIC_STD.ALL;
+USE IEEE.STD_LOGIC_UNSIGNED.ALL;
 
 ENTITY AlarmClock IS
     PORT (
@@ -34,6 +35,26 @@ ARCHITECTURE b OF AlarmClock IS
 	constant S_SET_ONE  : std_logic_vector(2 downto 0) := "100";
 
 	signal cnt10, cnt1 : std_logic_vector(3 downto 0) := "0000";	-- init
+	
+		-- 7-segment decoder
+	FUNCTION to_7seg(b : std_logic_vector(3 downto 0)) RETURN std_logic_vector IS
+		 VARIABLE SEG : std_logic_vector(6 downto 0);
+	BEGIN
+		 CASE b IS
+			  WHEN "0000" => seg := "1000000"; -- 0
+			  WHEN "0001" => seg := "1111001"; -- 1
+			  WHEN "0010" => seg := "0100100"; -- 2
+			  WHEN "0011" => seg := "0110000"; -- 3
+			  WHEN "0100" => seg := "0011001"; -- 4
+			  WHEN "0101" => seg := "0010010"; -- 5
+			  WHEN "0110" => seg := "0000010"; -- 6
+			  WHEN "0111" => seg := "1111000"; -- 7
+			  WHEN "1000" => seg := "0000000"; -- 8
+			  WHEN "1001" => seg := "0010000"; -- 9
+			  WHEN others => seg := "0001110"; -- F
+		 END CASE;
+		 RETURN SEG;
+	END FUNCTION to_7seg;
 
 BEGIN
     -- State Update routine
@@ -134,25 +155,6 @@ BEGIN
 			end if;
 	END PROCESS;
 	
-	-- 7-segment decoder
-	FUNCTION to_7seg(b : std_logic_vector(3 downto 0)) RETURN std_logic_vector IS
-		 VARIABLE SEG : std_logic_vector(6 downto 0);
-	BEGIN
-		 CASE b IS
-			  WHEN "0000" => seg := "1000000"; -- 0
-			  WHEN "0001" => seg := "1111001"; -- 1
-			  WHEN "0010" => seg := "0100100"; -- 2
-			  WHEN "0011" => seg := "0110000"; -- 3
-			  WHEN "0100" => seg := "0011001"; -- 4
-			  WHEN "0101" => seg := "0010010"; -- 5
-			  WHEN "0110" => seg := "0000010"; -- 6
-			  WHEN "0111" => seg := "1111000"; -- 7
-			  WHEN "1000" => seg := "0000000"; -- 8
-			  WHEN "1001" => seg := "0010000"; -- 9
-			  WHEN others => seg := "0001110"; -- F
-		 END CASE;
-		 RETURN SEG;
-	END;
 	-- 7-segment display
 	PROCESS(clk)
 	BEGIN
