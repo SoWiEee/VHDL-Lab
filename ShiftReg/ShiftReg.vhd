@@ -7,7 +7,7 @@ ENTITY ShiftReg IS
 		SEL	   : in std_logic_vector (1 downto 0);  -- select mode
 		BA	   : in std_logic_vector(3 downto 0);	-- load mode input
 		SRSI, SLSI : in std_logic;			-- right/left shift padding bit
-		RC	   : out std_logic_vector(3 downto 0)	-- output
+		RC	   : inout std_logic_vector(3 downto 0)	-- output
 	);
 END ShiftReg;
 
@@ -18,7 +18,7 @@ ARCHITECTURE b OF ShiftReg IS
 		IF rising_edge(CLK) then
 			IF RST = '1' then RC <= "0000";
 			ELSE
-				CASE s IS
+				CASE SEL IS
 					WHEN "00" => RC <= RC;
 					WHEN "01" => RC(3) <= SRSI; RC(2) <= RC(3);
 						     RC(1) <= RC(2); RC(0) <= RC(1);
