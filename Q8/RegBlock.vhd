@@ -16,6 +16,8 @@ BEGIN
 		PROCESS(clk) IS
 		BEGIN 
 			IF rising_edge(clk) then
+			-- laod = 0 => seq
+			-- load = 1 => par
             Q <= (seq and not(load)) or (par and load);
 			END IF;
 	END PROCESS proc;
